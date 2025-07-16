@@ -45,7 +45,8 @@
   </table>
 
   <script>
-    fetch('/usuarios')
+    fetch('https://fotoload-api.onrender.com/usuarios')
+
       .then(res => res.json())
       .then(lista => {
         const tbody = document.getElementById('usuarios');
