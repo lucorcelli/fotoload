@@ -64,7 +64,7 @@
   <script>
     function carregarProdutos() {
       const minNota = document.getElementById('minNota').value;
-      fetch(`/produtos?minNota=${minNota}`)
+      fetch('https://fotoload-api.onrender.com/produtos/destaques')
         .then(res => res.json())
         .then(produtos => {
           const grid = document.getElementById('produtos');
