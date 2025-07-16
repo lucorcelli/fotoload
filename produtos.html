@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Fotoload - Todos os Produtos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .filtro {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input[type="number"] {
+      padding: 6px;
+      width: 80px;
+    }
+    button {
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+    .card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #ccc;
+      width: 250px;
+      padding: 15px;
+      text-align: center;
+    }
+    .card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+    .nota {
+      font-size: 1.1em;
+      color: #ffa500;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🛍️ Todos os Produtos</h1>
+  <div class="filtro">
+    <label for="minNota">Nota mínima:</label>
+    <input type="number" id="minNota" min="0" max="100" value="0" />
+    <button onclick="carregarProdutos()">Filtrar</button>
+  </div>
+  <div class="grid" id="produtos"></div>
+
+  <script>
+    function carregarProdutos() {
+      const minNota = document.getElementById('minNota').value;
+      fetch(`/produtos?minNota=${minNota}`)
+        .then(res => res.json())
+        .then(produtos => {
+          const grid = document.getElementById('produtos');
+          grid.innerHTML = '';
+          produtos.forEach(p => {
+            grid.innerHTML += `
+              <div class="card">
+                <img src="${p.fotos[0]?.url || 'https://via.placeholder.com/250x160?text=Sem+Imagem'}" alt="Foto de ${p.nome}" />
+                <h3>${p.nome}</h3>
+                <p>${p.descricao || 'Sem descrição'}</p>
+                <div class="nota">⭐ ${p.nota_atual || '–'}</div>
+              </div>
+            `;
+          });
+        })
+        .catch(err => {
+          console.error('Erro ao buscar produtos:', err);
+          document.getElementById('produtos').innerHTML =
+            '<p>Erro ao carregar os produtos. Verifique a API.</p>';
+        });
+    }
+
+    // Carrega os produtos na abertura
+    carregarProdutos();
+  </script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Fotoload - Painel Admin</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f8f8;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #444;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    th {
+      background-color: #eee;
+    }
+  </style>
+</head>
+<body>
+  <h1>👮 Painel Administrativo</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Créditos</th>
+        <th>Débitos</th>
+        <th>Cadastro</th>
+      </tr>
+    </thead>
+    <tbody id="usuarios"></tbody>
+  </table>
+
+  <script>
+    fetch('/usuarios')
+      .then(res => res.json())
+      .then(lista => {
+        const tbody = document.getElementById('usuarios');
+        lista.forEach(user => {
+          tbody.innerHTML += `
+            <tr>
+              <td>${user.id}</td>
+              <td>${user.nome}</td>
+              <td>${user.email}</td>
+              <td>${user.saldo_creditos ?? 0}</td>
+              <td>${user.saldo_debitos ?? 0}</td>
+              <td>${new Date(user.data_cadastro).toLocaleDateString()}</td>
+            </tr>
+          `;
+        });
+      })
+      .catch(err => {
+        console.error('Erro ao buscar usuários:', err);
+        document.getElementById('usuarios').innerHTML =
+          '<tr><td colspan="6">Erro ao carregar usuários.</td></tr>';
+      });
+  </script>
+</body>
+</html>
