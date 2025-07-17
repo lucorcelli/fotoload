@@ -134,7 +134,7 @@
         })
         .then(resp => {
           document.getElementById('msg').innerText =
-            `✅ Produto cadastrado com sucesso! ID: ${resp.produto.id}`;
+            `✅ Produto cadastrado com sucesso! ID: ${resp.id}`;
         })
         .catch(err => {
           console.error('Erro ao cadastrar produto:', err);
