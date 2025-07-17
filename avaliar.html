@@ -87,7 +87,7 @@
         comentario: document.getElementById('comentario').value
       };
 
-      fetch('/avaliar', {
+      fetch('https://fotoload.vercel.app/avaliar', { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dados)
