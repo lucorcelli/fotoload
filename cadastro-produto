@@ -69,6 +69,9 @@
     <label for="usuario_id">ID do Usuário:</label>
     <input type="number" id="usuario_id" required />
 
+    <label for="categoria_id">ID da Categoria:</label>
+    <input type="number" id="categoria_id" required />
+
     <label>Fotos (URLs - até 6):</label>
     <div class="fotos">
       <input type="text" class="foto" placeholder="URL da foto 1" />
@@ -98,8 +101,27 @@
         referencia_fabrica: document.getElementById('referencia').value,
         codigo_barras: document.getElementById('codigo').value,
         usuario_id: Number(document.getElementById('usuario_id').value),
+        categoria_id: Number(document.getElementById('categoria_id').value),
         fotos
       };
+
+      if (!dados.referencia_fabrica && !dados.codigo_barras) {
+        document.getElementById('msg').innerText =
+          '❌ Informe referência de fábrica ou código de barras.';
+        return;
+      }
+
+      if (fotos.length === 0) {
+        document.getElementById('msg').innerText =
+          '❌ Pelo menos uma foto é obrigatória.';
+        return;
+      }
+
+      if (fotos.length > 6) {
+        document.getElementById('msg').innerText =
+          '❌ Máximo de 6 fotos por produto.';
+        return;
+      }
 
       fetch('https://fotoload-api.onrender.com/produtos', {
         method: 'POST',
@@ -111,11 +133,13 @@
           return res.json();
         })
         .then(resp => {
-          document.getElementById('msg').innerText = `✅ Produto cadastrado com ID: ${resp.id}`;
+          document.getElementById('msg').innerText =
+            `✅ Produto cadastrado com sucesso! ID: ${resp.produto.id}`;
         })
         .catch(err => {
           console.error('Erro ao cadastrar produto:', err);
-          document.getElementById('msg').innerText = '❌ Erro ao cadastrar produto.';
+          document.getElementById('msg').innerText =
+            '❌ Erro ao cadastrar produto.';
         });
     }
   </script>
