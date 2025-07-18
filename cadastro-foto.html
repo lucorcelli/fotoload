@@ -81,8 +81,13 @@
 
     document.getElementById('formFotos').addEventListener('submit', async function(e) {
       e.preventDefault();
-      const produtoId = 1; // esse ID deve vir dinamicamente após o cadastro do produto
-
+      const params = new URLSearchParams(window.location.search);
+      const produtoId = params.get('produtoId') || localStorage.getItem('produtoId');
+      
+      if (!produtoId) {
+        alert('Produto não encontrado. Retorne ao cadastro.');
+        return;
+      }
       for (let i = 0; i < 6; i++) {
         const tipo = document.querySelector(`[name="tipo[${i}]"]`).value;
 
