@@ -8,7 +8,7 @@
   <h2>Adicionar fotos para o produto</h2>
   <form id="formFotos" enctype="multipart/form-data">
     
-    <!-- Campos de imagem -->
+    <!-- Seis campos de foto -->
     <div class="foto-campo" data-index="0">
       <label>Foto 1:</label><br />
       <select name="tipo[0]" onchange="alternarEntrada(this, 0)">
@@ -19,6 +19,7 @@
       <input type="text" name="url[0]" style="display:none;" placeholder="https://imagem.jpg" />
     </div>
 
+    <!-- Repetição para Fotos 2 a 6 -->
     <div class="foto-campo" data-index="1">
       <label>Foto 2:</label><br />
       <select name="tipo[1]" onchange="alternarEntrada(this, 1)">
@@ -79,38 +80,50 @@
       document.querySelector(`[name="url[${index}]"]`).style.display = tipo === 'url' ? 'inline' : 'none';
     }
 
-    document.getElementById('formFotos').addEventListener('submit', async function(e) {
-      e.preventDefault();
+    document.addEventListener('DOMContentLoaded', () => {
+      // Recuperar o produtoId da URL ou localStorage
       const params = new URLSearchParams(window.location.search);
       const produtoId = params.get('produtoId') || localStorage.getItem('produtoId');
-      
+
       if (!produtoId) {
-        alert('Produto não encontrado. Retorne ao cadastro.');
+        alert('Produto não identificado. Volte à página de cadastro.');
+        document.getElementById('formFotos').style.display = 'none';
         return;
       }
-      for (let i = 0; i < 6; i++) {
-        const tipo = document.querySelector(`[name="tipo[${i}]"]`).value;
 
-        if (tipo === 'arquivo') {
-          const fileInput = document.querySelector(`[name="arquivo[${i}]"]`);
-          if (fileInput.files.length > 0) {
-            const formData = new FormData();
-            formData.append('arquivo', fileInput.files[0]);
-            await fetch(`/produtos/${produtoId}/fotos/upload`, { method: 'POST', body: formData });
-          }
-        } else if (tipo === 'url') {
-          const url = document.querySelector(`[name="url[${i}]"]`).value;
-          if (url) {
-            await fetch(`/produtos/${produtoId}/fotos/url`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ url })
-            });
+      // Formulário principal
+      const form = document.getElementById('formFotos');
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        for (let i = 0; i < 6; i++) {
+          const tipo = document.querySelector(`[name="tipo[${i}]"]`).value;
+
+          if (tipo === 'arquivo') {
+            const fileInput = document.querySelector(`[name="arquivo[${i}]"]`);
+            if (fileInput.files.length > 0) {
+              const formData = new FormData();
+              formData.append('arquivo', fileInput.files[0]);
+              await fetch(`/produtos/${produtoId}/fotos/upload`, {
+                method: 'POST',
+                body: formData
+              });
+            }
+          } else if (tipo === 'url') {
+            const url = document.querySelector(`[name="url[${i}]"]`).value;
+            if (url) {
+              await fetch(`/produtos/${produtoId}/fotos/url`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url })
+              });
+            }
           }
         }
-      }
 
-      alert('Fotos enviadas com sucesso!');
+        alert('Fotos enviadas com sucesso!');
+        form.reset();
+      });
     });
   </script>
 </body>
