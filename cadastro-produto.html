@@ -33,9 +33,6 @@
       border-radius: 4px;
       border: 1px solid #ccc;
     }
-    .fotos input {
-      margin-top: 4px;
-    }
     button {
       margin-top: 20px;
       padding: 10px 20px;
@@ -72,16 +69,6 @@
     <label for="categoria_id">ID da Categoria:</label>
     <input type="number" id="categoria_id" required />
 
-    <label>Fotos (URLs - até 6):</label>
-    <div class="fotos">
-      <input type="text" class="foto" placeholder="URL da foto 1" />
-      <input type="text" class="foto" placeholder="URL da foto 2" />
-      <input type="text" class="foto" placeholder="URL da foto 3" />
-      <input type="text" class="foto" placeholder="URL da foto 4" />
-      <input type="text" class="foto" placeholder="URL da foto 5" />
-      <input type="text" class="foto" placeholder="URL da foto 6" />
-    </div>
-
     <button type="submit">Cadastrar Produto</button>
   </form>
 
@@ -91,10 +78,6 @@
     function enviarProduto(e) {
       e.preventDefault();
 
-      const fotos = Array.from(document.querySelectorAll('.foto'))
-        .map(input => input.value.trim())
-        .filter(url => url !== '');
-
       const dados = {
         nome: document.getElementById('nome').value,
         descricao: document.getElementById('descricao').value,
@@ -102,24 +85,12 @@
         codigo_barras: document.getElementById('codigo').value,
         usuario_id: Number(document.getElementById('usuario_id').value),
         categoria_id: Number(document.getElementById('categoria_id').value),
-        fotos
+        fotos: [] // fotos removidas nesta etapa
       };
 
       if (!dados.referencia_fabrica && !dados.codigo_barras) {
         document.getElementById('msg').innerText =
           '❌ Informe referência de fábrica ou código de barras.';
-        return;
-      }
-
-      if (fotos.length === 0) {
-        document.getElementById('msg').innerText =
-          '❌ Pelo menos uma foto é obrigatória.';
-        return;
-      }
-
-      if (fotos.length > 6) {
-        document.getElementById('msg').innerText =
-          '❌ Máximo de 6 fotos por produto.';
         return;
       }
 
@@ -133,10 +104,8 @@
           return res.json();
         })
         .then(resp => {
-          // Salva localmente, se quiser usar em outras páginas também
+          // Salvar produtoId e redirecionar
           localStorage.setItem('produtoId', resp.id);
-          
-          // Redireciona com o ID na URL
           window.location.href = `/cadastro-foto.html?produtoId=${resp.id}`;
         })
         .catch(err => {
