@@ -133,8 +133,11 @@
           return res.json();
         })
         .then(resp => {
-          document.getElementById('msg').innerText =
-            `✅ Produto cadastrado com sucesso! ID: ${resp.id}`;
+          // Salva localmente, se quiser usar em outras páginas também
+          localStorage.setItem('produtoId', resp.id);
+          
+          // Redireciona com o ID na URL
+          window.location.href = `/cadastro-foto.html?produtoId=${resp.id}`;
         })
         .catch(err => {
           console.error('Erro ao cadastrar produto:', err);
