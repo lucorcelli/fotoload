@@ -2,73 +2,111 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <title>📷 Adicionar Foto ao Produto</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      padding: 20px;
-      max-width: 600px;
-      margin: auto;
-    }
-    h1 {
-      text-align: center;
-      color: #333;
-    }
-    form {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-    }
-    label {
-      display: block;
-      margin-top: 10px;
-      font-weight: bold;
-    }
-    input {
-      width: 100%;
-      padding: 8px;
-      margin-top: 4px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
-    button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .msg {
-      text-align: center;
-      margin-top: 10px;
-    }
-  </style>
+  <title>Cadastro de Fotos</title>
 </head>
 <body>
-  <h1>📷 Adicionar Foto ao Produto</h1>
+  <h2>Adicionar fotos para o produto</h2>
+  <form id="formFotos" enctype="multipart/form-data">
+    
+    <!-- Campos de imagem -->
+    <div class="foto-campo" data-index="0">
+      <label>Foto 1:</label><br />
+      <select name="tipo[0]" onchange="alternarEntrada(this, 0)">
+        <option value="arquivo">Arquivo</option>
+        <option value="url">URL</option>
+      </select><br />
+      <input type="file" name="arquivo[0]" /><br />
+      <input type="text" name="url[0]" style="display:none;" placeholder="https://imagem.jpg" />
+    </div>
 
-  <!-- Upload de arquivo -->
-  <form onsubmit="enviarArquivo(event)">
-    <label for="produto_id_arquivo">ID do Produto:</label>
-    <input type="number" id="produto_id_arquivo" required />
+    <div class="foto-campo" data-index="1">
+      <label>Foto 2:</label><br />
+      <select name="tipo[1]" onchange="alternarEntrada(this, 1)">
+        <option value="arquivo">Arquivo</option>
+        <option value="url">URL</option>
+      </select><br />
+      <input type="file" name="arquivo[1]" /><br />
+      <input type="text" name="url[1]" style="display:none;" placeholder="https://imagem.jpg" />
+    </div>
 
-    <label for="arquivo">Selecionar imagem:</label>
-    <input type="file" id="arquivo" accept="image/*" required />
+    <div class="foto-campo" data-index="2">
+      <label>Foto 3:</label><br />
+      <select name="tipo[2]" onchange="alternarEntrada(this, 2)">
+        <option value="arquivo">Arquivo</option>
+        <option value="url">URL</option>
+      </select><br />
+      <input type="file" name="arquivo[2]" /><br />
+      <input type="text" name="url[2]" style="display:none;" placeholder="https://imagem.jpg" />
+    </div>
 
-    <button type="submit">Enviar Arquivo</button>
+    <div class="foto-campo" data-index="3">
+      <label>Foto 4:</label><br />
+      <select name="tipo[3]" onchange="alternarEntrada(this, 3)">
+        <option value="arquivo">Arquivo</option>
+        <option value="url">URL</option>
+      </select><br />
+      <input type="file" name="arquivo[3]" /><br />
+      <input type="text" name="url[3]" style="display:none;" placeholder="https://imagem.jpg" />
+    </div>
+
+    <div class="foto-campo" data-index="4">
+      <label>Foto 5:</label><br />
+      <select name="tipo[4]" onchange="alternarEntrada(this, 4)">
+        <option value="arquivo">Arquivo</option>
+        <option value="url">URL</option>
+      </select><br />
+      <input type="file" name="arquivo[4]" /><br />
+      <input type="text" name="url[4]" style="display:none;" placeholder="https://imagem.jpg" />
+    </div>
+
+    <div class="foto-campo" data-index="5">
+      <label>Foto 6:</label><br />
+      <select name="tipo[5]" onchange="alternarEntrada(this, 5)">
+        <option value="arquivo">Arquivo</option>
+        <option value="url">URL</option>
+      </select><br />
+      <input type="file" name="arquivo[5]" /><br />
+      <input type="text" name="url[5]" style="display:none;" placeholder="https://imagem.jpg" />
+    </div>
+
+    <button type="submit">Enviar fotos</button>
   </form>
 
-  <!-- Envio por URL -->
-  <form onsubmit="enviarURL(event)">
-    <label for="produto_id_url">ID do Produto:</label>
-    <input type="number" id="produto_id_url" required />
+  <script>
+    function alternarEntrada(select, index) {
+      const tipo = select.value;
+      document.querySelector(`[name="arquivo[${index}]"]`).style.display = tipo === 'arquivo' ? 'inline' : 'none';
+      document.querySelector(`[name="url[${index}]"]`).style.display = tipo === 'url' ? 'inline' : 'none';
+    }
 
-    <label for="url">URL da imagem:</label>
-    <input type="text" id="url" placeholder="https://exemplo.com/imagem.jpg" required />
+    document.getElementById('formFotos').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const produtoId = 1; // esse ID deve vir dinamicamente após o cadastro do produto
 
-    <button type="submit">Carregar da URL
+      for (let i = 0; i < 6; i++) {
+        const tipo = document.querySelector(`[name="tipo[${i}]"]`).value;
+
+        if (tipo === 'arquivo') {
+          const fileInput = document.querySelector(`[name="arquivo[${i}]"]`);
+          if (fileInput.files.length > 0) {
+            const formData = new FormData();
+            formData.append('arquivo', fileInput.files[0]);
+            await fetch(`/produtos/${produtoId}/fotos/upload`, { method: 'POST', body: formData });
+          }
+        } else if (tipo === 'url') {
+          const url = document.querySelector(`[name="url[${i}]"]`).value;
+          if (url) {
+            await fetch(`/produtos/${produtoId}/fotos/url`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ url })
+            });
+          }
+        }
+      }
+
+      alert('Fotos enviadas com sucesso!');
+    });
+  </script>
+</body>
+</html>
