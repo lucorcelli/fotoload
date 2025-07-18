@@ -94,6 +94,7 @@
         return;
       }
 
+      console.log("Dados enviados:", JSON.stringify(dados));
       fetch('https://fotoload-api.onrender.com/produtos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
