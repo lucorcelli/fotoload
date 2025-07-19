@@ -106,4 +106,101 @@
         </select>
         <input type="file" name="arquivo[${i}]" />
         <input type="text" name="url[${i}]" style="display:none;" placeholder="https://imagem.jpg" />
-        <div id="
+        <div id="preview-${i}"></div>
+      `;
+      document.getElementById('fotos').appendChild(div);
+
+      // Adiciona evento para preview
+      const fileInput = div.querySelector(`[name="arquivo[${i}]"]`);
+      fileInput.addEventListener('change', function () {
+        adicionarPreview(this, i);
+      });
+    }
+
+    function alternarEntrada(select, index) {
+      const tipo = select.value;
+      document.querySelector(`[name="arquivo[${index}]"]`).style.display = tipo === 'arquivo' ? 'inline' : 'none';
+      document.querySelector(`[name="url[${index}]"]`).style.display = tipo === 'url' ? 'inline' : 'none';
+    }
+
+    function adicionarPreview(fileInput, index) {
+      const preview = document.getElementById(`preview-${index}`);
+      preview.innerHTML = '';
+      const file = fileInput.files[0];
+      if (file && file.type.startsWith('image/')) {
+        const img = document.createElement('img');
+        img.className = 'preview';
+        img.src = URL.createObjectURL(file);
+        preview.appendChild(img);
+      } else {
+        preview.textContent = 'Arquivo inválido.';
+      }
+    }
+
+    document.getElementById('cadastroForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const msg = document.getElementById('msg');
+      msg.textContent = '';
+
+      const dados = {
+        nome: document.getElementById('nome').value.trim(),
+        descricao: document.getElementById('descricao').value.trim(),
+        referencia_fabrica: document.getElementById('referencia').value.trim(),
+        codigo_barras: document.getElementById('codigo').value.trim(),
+        usuario_id: Number(document.getElementById('usuario_id').value),
+        categoria_id: Number(document.getElementById('categoria_id').value)
+      };
+
+      if (!dados.referencia_fabrica && !dados.codigo_barras) {
+        msg.textContent = '❌ Informe referência de fábrica ou código de barras.';
+        return;
+      }
+
+      try {
+        const res = await fetch('https://fotoload-api.onrender.com/produtos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dados)
+        });
+
+        if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
+        const produto = await res.json();
+        const produtoId = produto.id;
+
+        // Enviar as fotos
+        for (let i = 0; i < 6; i++) {
+          const tipo = document.querySelector(`[name="tipo[${i}]"]`).value;
+
+          if (tipo === 'arquivo') {
+            const fileInput = document.querySelector(`[name="arquivo[${i}]"]`);
+            if (fileInput.files.length > 0) {
+              const formData = new FormData();
+              formData.append('arquivo', fileInput.files[0]);
+              await fetch(`https://fotoload-api.onrender.com/produtos/${produtoId}/fotos/upload`, {
+                method: 'POST',
+                body: formData
+              });
+            }
+          } else if (tipo === 'url') {
+            const url = document.querySelector(`[name="url[${i}]"]`).value.trim();
+            if (url) {
+              await fetch(`https://fotoload-api.onrender.com/produtos/${produtoId}/fotos/url`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url })
+              });
+            }
+          }
+        }
+
+        msg.textContent = `✅ Produto criado com ID ${produtoId} e fotos enviadas!`;
+        document.getElementById('cadastroForm').reset();
+        document.querySelectorAll('[id^="preview-"]').forEach(el => el.innerHTML = '');
+      } catch (err) {
+        console.error('Erro:', err);
+        msg.textContent = '❌ Falha ao cadastrar produto ou enviar fotos.';
+      }
+    });
+  </script>
+</body>
+</html>
