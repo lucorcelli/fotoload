@@ -62,8 +62,7 @@
 </head>
 <body>
   <h1>📦 Cadastro de Produto com Fotos</h1>
-  <form id="cadastroForm">
-
+    <form id="cadastroForm">
     <!-- Dados do produto -->
     <label>Nome:</label>
     <input type="text" id="nome" required />
@@ -83,9 +82,8 @@
     <label>ID da Categoria:</label>
     <input type="number" id="categoria_id" required />
 
-    <!-- Campos de foto -->
+    <!-- Fotos -->
     <h3>🖼️ Adicionar até 6 fotos</h3>
-
     <div id="fotos"></div>
 
     <button type="submit">Cadastrar Produto e Fotos</button>
@@ -94,7 +92,7 @@
   <div class="msg" id="msg"></div>
 
   <script>
-    // Cria campos de imagem dinamicamente
+    // Monta campos de foto com preview
     for (let i = 0; i < 6; i++) {
       const div = document.createElement('div');
       div.className = 'foto-campo';
@@ -110,9 +108,8 @@
       `;
       document.getElementById('fotos').appendChild(div);
 
-      // Adiciona evento para preview
-      const fileInput = div.querySelector(`[name="arquivo[${i}]"]`);
-      fileInput.addEventListener('change', function () {
+      // Preview da imagem
+      div.querySelector(`[name="arquivo[${i}]"]`).addEventListener('change', function () {
         adicionarPreview(this, i);
       });
     }
@@ -167,7 +164,7 @@
         const produto = await res.json();
         const produtoId = produto.id;
 
-        // Enviar as fotos
+        // Envia fotos
         for (let i = 0; i < 6; i++) {
           const tipo = document.querySelector(`[name="tipo[${i}]"]`).value;
 
@@ -193,7 +190,7 @@
           }
         }
 
-        msg.textContent = `✅ Produto criado com ID ${produtoId} e fotos enviadas!`;
+        msg.textContent = `✅ Produto criado (ID: ${produtoId}) e fotos enviadas com sucesso!`;
         document.getElementById('cadastroForm').reset();
         document.querySelectorAll('[id^="preview-"]').forEach(el => el.innerHTML = '');
       } catch (err) {
