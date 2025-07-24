@@ -7,7 +7,7 @@
     "build": "tsc",
     "generate": "prisma generate",
     "prepare": "npm run generate && npm run build",
-    "start": "node dist/server.js"
+    "start": "node server.js"
   },
   "dependencies": {
     "@prisma/client": "^5.5.0",
