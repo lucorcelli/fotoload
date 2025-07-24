@@ -69,3 +69,4 @@ Plataforma para cadastro, avaliação e venda de fotos e dados de produtos. Usu�
 4. Lógica de cálculo e atualização de notas
 5. Sistema de moderação automática/manual
 6. Testes e validação
+Forçando novo deploy
