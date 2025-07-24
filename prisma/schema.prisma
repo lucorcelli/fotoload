@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Produto {
+  id                 Int                 @id @default(autoincrement())
+  nome               String              @db.VarChar(100)
+  descricao          String
+  referencia_fabrica String?             @db.VarChar(50)
+  codigo_barras      String?             @db.VarChar(50)
+  usuario_id         Int
+  nota_atual         Int?                @default(0)
+  data_criacao       DateTime?           @default(now()) @db.Timestamp(6)
+  categoria_id       Int
+  categoria          Categoria           @relation(fields: [categoria_id], references: [id])
+  usuario            Usuario             @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  campos_extras      ProdutoCampoExtra[]
+  fotos              ProdutoFoto[]
+  notas              ProdutoNota[]
+  transacoes         TransacaoCredito[]
+}
+
+model ProdutoCampoExtra {
+  id         Int     @id @default(autoincrement())
+  produto_id Int
+  campo      String? @db.VarChar(50)
+  valor      String?
+  produto    Produto @relation(fields: [produto_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model ProdutoFoto {
+  id           Int     @id @default(autoincrement())
+  produto_id   Int
+  conteudo     Bytes
+  nome_arquivo String?
+  mime_type    String?
+  produto      Produto @relation(fields: [produto_id], references: [id])
+}
+
+model ProdutoNota {
+  id           Int       @id @default(autoincrement())
+  produto_id   Int
+  nota         Int?
+  origem       String?   @db.VarChar(50)
+  usuario_id   Int?
+  data_criacao DateTime? @default(now()) @db.Timestamp(6)
+  comentario   String?
+  produto      Produto   @relation(fields: [produto_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  usuario      Usuario?  @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model TransacaoCredito {
+  id             Int       @id @default(autoincrement())
+  usuario_id     Int
+  tipo           String?   @db.VarChar(20)
+  valor          Int
+  produto_id     Int?
+  data_transacao DateTime? @default(now()) @db.Timestamp(6)
+  descricao      String?
+  produto        Produto?  @relation(fields: [produto_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  usuario        Usuario   @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Usuario {
+  id             Int                @id @default(autoincrement())
+  nome           String?            @db.VarChar(100)
+  email          String?            @unique @db.VarChar(100)
+  saldo_creditos Int?               @default(0)
+  saldo_debitos  Int?               @default(0)
+  data_cadastro  DateTime?          @default(now()) @db.Timestamp(6)
+  produtos       Produto[]
+  notas          ProdutoNota[]
+  transacoes     TransacaoCredito[]
+}
+
+model Categoria {
+  id       Int       @id @default(autoincrement())
+  nome     String
+  produtos Produto[]
+}
