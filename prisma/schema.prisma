@@ -45,7 +45,7 @@ model ProdutoFoto {
 model ProdutoNota {
   id           Int       @id @default(autoincrement())
   produto_id   Int
-  nota         Int?
+  nota         Float?
   origem       String?   @db.VarChar(50)
   usuario_id   Int?
   data_criacao DateTime? @default(now()) @db.Timestamp(6)

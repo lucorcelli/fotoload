@@ -3,6 +3,7 @@ import cors from 'cors';
 import multer from 'multer';
 import axios from 'axios';
 import { PrismaClient } from '@prisma/client';
+import path from 'path';
 
 
 const app = express();
@@ -71,7 +72,7 @@ app.get('/produtos/destaques', async (req, res) => {
         id: produto.id,
         nome: produto.nome,
         categoria: produto.categoria?.nome ?? null,
-        foto: produto.fotos[0] ? `/fotos/${produto.fotos[0].id}` : null,
+        foto: produto.fotos[0] ? `/fotos/${produto.fotos[0].id}` : `/imagens/sem-imagem.jpg`,
         nota_media: Math.round(nota._avg.nota ?? 0)
       };
     }));
@@ -81,6 +82,9 @@ app.get('/produtos/destaques', async (req, res) => {
     res.status(500).json({ erro: e.message });
   }
 });
+
+app.use('/imagens', express.static(path.join(__dirname, 'public/imagens')));
+
 
 // 📸 Adicionar foto via URL
 app.post('/produtos/:id/fotos/url', async (req, res) => {
