@@ -72,7 +72,7 @@
           produtos.forEach(p => {
             grid.innerHTML += `
               <div class="card">
-                <img src="${Array.isArray(p.fotos) && p.fotos[0]?.url ? p.fotos[0].url : 'https://via.placeholder.com/250x160?text=Sem+Imagem'}" alt="Foto de ${p.nome}" />
+                <img src="/imagens/sem-imagem.jpg" />
                 <h3>${p.nome}</h3>
                 <p>${p.descricao || 'Sem descrição'}</p>
                 <div class="nota">⭐ ${p.nota_atual || '–'}</div>
