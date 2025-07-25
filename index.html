@@ -44,32 +44,29 @@
   <div class="grid" id="destaques"></div>
 
   <script>
-    //fetch('/produtos/destaques')
     fetch('https://fotoload-api.onrender.com/produtos/destaques')
       .then(res => res.json())
       .then(produtos => {
         const grid = document.getElementById('destaques');
         produtos.forEach(p => {
+          const fotoUrl = p.fotos?.[0]?.id
+            ? `/fotos/${p.fotos[0].id}`
+            : '/imagens/sem-imagem.jpg';
+
           grid.innerHTML += `
             <div class="card">
-              const fotoUrl = p.fotos?.[0]?.id
-                ? `/fotos/${p.fotos[0].id}`
-                : '/imagens/sem-imagem.jpg';
-              grid.innerHTML += `
-                <div class="card">
-                 <img src="${fotoUrl}" />
-                 <h3>${p.nome}</h3>
-                  <p>${p.categoria}</p>
-                  <div class="nota">⭐ ${p.nota_media}</div>
-              </div>
+              <img src="${fotoUrl}" />
+              <h3>${p.nome}</h3>
+              <p>${p.categoria}</p>
+              <div class="nota">⭐ ${p.nota_media}</div>
+            </div>
           `;
         });
-        
       })
       .catch(err => {
         console.error('Erro ao buscar destaques:', err);
         document.getElementById('destaques').innerHTML =
-      '<p>Erro ao carregar os produtos. Verifique o backend.</p>';
+          '<p>Erro ao carregar os produtos. Verifique o backend.</p>';
       });
   </script>
 </body>
