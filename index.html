@@ -52,7 +52,9 @@
         produtos.forEach(p => {
           grid.innerHTML += `
             <div class="card">
-              <img src="/imagens/sem-imagem.jpg" />
+              const fotoUrl = p.fotos?.[0]?.id
+                ? `/fotos/${p.fotos[0].id}`
+                : '/imagens/sem-imagem.jpg';
               <h3>${p.nome}</h3>
               <p>${p.categoria}</p>
               <div class="nota">⭐ ${p.nota_media}</div>
