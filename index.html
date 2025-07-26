@@ -50,7 +50,7 @@
         const grid = document.getElementById('destaques');
         produtos.forEach(p => {
           const fotoUrl = p.fotos?.[0]?.id
-            ? `/fotos/${p.fotos[0].id}`
+            ? `https://fotoload-api.onrender.com/fotos/${p.fotos[0].id}`
             : '/imagens/sem-imagem.jpg';
 
           grid.innerHTML += `
