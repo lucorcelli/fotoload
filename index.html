@@ -49,18 +49,15 @@
       .then(produtos => {
         const grid = document.getElementById('destaques');
         produtos.forEach(p => {
-          const fotoUrl = p.fotos?.[0]?.id
-            ? `https://fotoload-api.onrender.com/fotos/${p.fotos[0].id}`
-            : '/imagens/sem-imagem.jpg';
-
-          grid.innerHTML += `
-            <div class="card">
-              <img src="${p.foto || '/imagens/sem-imagem.jpg'}" />
-              <h3>${p.nome}</h3>
-              <p>${p.categoria}</p>
-              <div class="nota">⭐ ${p.nota_media}</div>
-            </div>
-          `;
+          const fotoUrl = p.foto || '/imagens/sem-imagem.jpg';
+             grid.innerHTML += `
+              <div class="card">
+                <img src="${fotoUrl}" />
+                <h3>${p.nome}</h3>
+                <p>${p.categoria}</p>
+                <div class="nota">⭐ ${p.nota_media}</div>
+              </div>
+            `;
         });
       })
       .catch(err => {
