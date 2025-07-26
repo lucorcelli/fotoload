@@ -70,7 +70,9 @@ app.get('/produtos/destaques', async (req, res) => {
                 id: produto.id,
                 nome: produto.nome,
                 categoria: produto.categoria?.nome ?? null,
-                foto: produto.fotos[0] ? `/fotos/${produto.fotos[0].id}` : null,
+                foto: produto.fotos[0]  
+                    ? `https://fotoload-api.onrender.com/fotos/${produto.fotos[0].id}` 
+                    : null,
                 nota_media: Math.round(nota._avg.nota ?? 0)
             };
         }));
