@@ -55,7 +55,7 @@
 
           grid.innerHTML += `
             <div class="card">
-              <img src="${fotoUrl}" />
+              <img src="${p.foto || '/imagens/sem-imagem.jpg'}" />
               <h3>${p.nome}</h3>
               <p>${p.categoria}</p>
               <div class="nota">⭐ ${p.nota_media}</div>
