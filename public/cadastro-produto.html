@@ -61,6 +61,14 @@
   </style>
 </head>
 <body>
+  <div id="menu"></div>
+  <script>
+    fetch('menu.html')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('menu').innerHTML = html;
+      });
+  </script>
   <h1>📦 Cadastro de Produto com Fotos</h1>
     <form id="cadastroForm">
     <!-- Dados do produto -->
