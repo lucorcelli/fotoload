@@ -5,16 +5,18 @@ import axios from 'axios';
 import { PrismaClient } from '@prisma/client';
 import path from 'path';
 
-
 const app = express();
 const prisma = new PrismaClient();
 const upload = multer();
 
-app.use(cors({
-  origin: 'https://fotoload.vercel.app',
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type'],
-}));
+app.use(
+  cors({
+    origin: 'https://fotoload.vercel.app',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type'],
+    credentials: true
+  })
+);
 app.use(express.json());
 app.options('*', cors());
 
@@ -24,8 +26,8 @@ app.post('/usuarios', async (req, res) => {
     const novo = await prisma.usuario.create({
       data: {
         nome: req.body.nome,
-        email: req.body.email
-      }
+        email: req.body.email,
+      },
     });
     res.status(201).json(novo);
   } catch (e: any) {
@@ -40,8 +42,8 @@ app.get('/usuarios', async (req, res) => {
       select: {
         id: true,
         nome: true,
-        email: true
-      }
+        email: true,
+      },
     });
     res.json(lista);
   } catch (e: any) {
@@ -57,25 +59,29 @@ app.get('/produtos/destaques', async (req, res) => {
       by: ['produto_id'],
       _avg: { nota: true },
       orderBy: { _avg: { nota: 'desc' } },
-      take: 5
+      take: 5,
     });
 
-    const destaques = await Promise.all(notas.map(async (nota) => {
-      const produto = await prisma.produto.findUnique({
-        where: { id: nota.produto_id },
-        include: { categoria: true, fotos: { take: 1 } }
-      });
+    const destaques = await Promise.all(
+      notas.map(async (nota) => {
+        const produto = await prisma.produto.findUnique({
+          where: { id: nota.produto_id },
+          include: { categoria: true, fotos: { take: 1 } },
+        });
 
-      if (!produto) return null;
+        if (!produto) return null;
 
-      return {
-        id: produto.id,
-        nome: produto.nome,
-        categoria: produto.categoria?.nome ?? null,
-        foto: produto.fotos[0] ? `/fotos/${produto.fotos[0].id}` : `/imagens/sem-imagem.jpg`,
-        nota_media: Math.round(nota._avg.nota ?? 0)
-      };
-    }));
+        return {
+          id: produto.id,
+          nome: produto.nome,
+          categoria: produto.categoria?.nome ?? null,
+          foto: produto.fotos[0]
+            ? `https://fotoload-api.onrender.com/fotos/${produto.fotos[0].id}`
+            : `https://fotoload-api.onrender.com/imagens/sem-imagem.jpg`,
+          nota_media: Math.round(nota._avg.nota ?? 0),
+        };
+      })
+    );
 
     res.json(destaques.filter(Boolean));
   } catch (e: any) {
@@ -84,7 +90,6 @@ app.get('/produtos/destaques', async (req, res) => {
 });
 
 app.use('/imagens', express.static(path.join(__dirname, 'public/imagens')));
-
 
 // 📸 Adicionar foto via URL
 app.post('/produtos/:id/fotos/url', async (req, res) => {
@@ -97,8 +102,8 @@ app.post('/produtos/:id/fotos/url', async (req, res) => {
         produto_id: Number(req.params.id),
         conteudo: Buffer.from(resposta.data),
         nome_arquivo: url.split('/').pop() ?? 'imagem.jpg',
-        mime_type: resposta.headers['content-type'] ?? 'image/jpeg'
-      }
+        mime_type: resposta.headers['content-type'] ?? 'image/jpeg',
+      },
     });
 
     res.status(201).json({ mensagem: 'Foto carregada da URL com sucesso!' });
@@ -117,8 +122,8 @@ app.post('/produtos/:id/fotos/upload', upload.single('arquivo'), async (req, res
         produto_id: Number(req.params.id),
         conteudo: buffer,
         nome_arquivo: originalname,
-        mime_type: mimetype
-      }
+        mime_type: mimetype,
+      },
     });
 
     res.status(201).json({ mensagem: 'Foto enviada com sucesso!' });
@@ -131,7 +136,7 @@ app.post('/produtos/:id/fotos/upload', upload.single('arquivo'), async (req, res
 app.get('/fotos/:id', async (req, res) => {
   try {
     const foto = await prisma.produtoFoto.findUnique({
-      where: { id: Number(req.params.id) }
+      where: { id: Number(req.params.id) },
     });
     if (!foto || !foto.conteudo) {
       return res.status(404).send('Imagem não encontrada');
@@ -152,8 +157,8 @@ app.get('/produtos', async (req, res) => {
       include: {
         fotos: true,
         campos_extras: true,
-        categoria: true
-      }
+        categoria: true,
+      },
     });
     res.json(produtos);
   } catch (e: any) {
@@ -165,7 +170,7 @@ app.get('/produtos/notas', async (req, res) => {
   try {
     const notas = await prisma.produtoNota.findMany();
     const agrupado: any = {};
-    
+
     notas.forEach((n) => {
       const id = n.produto_id;
       if (!agrupado[id]) agrupado[id] = { soma: 0, total: 0 };
@@ -179,8 +184,8 @@ app.get('/produtos/notas', async (req, res) => {
       const d = dados as { soma: number; total: number };
       return {
         produto_id: Number(produto_id),
-        media: d.total ? d.soma / d.total : null
-     };
+        media: d.total ? d.soma / d.total : null,
+      };
     });
 
     res.json(resultado);
@@ -189,8 +194,6 @@ app.get('/produtos/notas', async (req, res) => {
     res.status(500).json({ erro: e.message });
   }
 });
-
-
 
 // ⭐ Avaliar produto
 app.post('/avaliar', async (req, res) => {
@@ -201,21 +204,19 @@ app.post('/avaliar', async (req, res) => {
         nota: req.body.nota,
         usuario_id: req.body.usuario_id,
         origem: req.body.origem,
-        comentario: req.body.comentario
-      }
+        comentario: req.body.comentario,
+      },
     });
 
     const notas = await prisma.produtoNota.findMany({
-      where: { produto_id: req.body.produto_id }
+      where: { produto_id: req.body.produto_id },
     });
 
-    const media = Math.round(
-      notas.reduce((soma, n) => soma + (n.nota ?? 0), 0) / notas.length
-    );
+    const media = Math.round(notas.reduce((soma, n) => soma + (n.nota ?? 0), 0) / notas.length);
 
     await prisma.produto.update({
       where: { id: req.body.produto_id },
-      data: { nota_atual: media }
+      data: { nota_atual: media },
     });
 
     res.json({ nota_atualizada: media });
@@ -233,8 +234,8 @@ app.post('/transacoes', async (req, res) => {
         valor: req.body.valor,
         tipo: req.body.tipo,
         produto_id: req.body.produto_id,
-        descricao: req.body.descricao
-      }
+        descricao: req.body.descricao,
+      },
     });
 
     const campo = req.body.tipo === 'credito' ? 'saldo_creditos' : 'saldo_debitos';
@@ -242,8 +243,8 @@ app.post('/transacoes', async (req, res) => {
     await prisma.usuario.update({
       where: { id: req.body.usuario_id },
       data: {
-        [campo]: { increment: req.body.valor }
-      }
+        [campo]: { increment: req.body.valor },
+      },
     });
 
     res.json(transacao);
@@ -265,14 +266,8 @@ app.get('/debug', async (req, res) => {
 // 🆕 Criar produto
 app.post('/produtos', async (req, res) => {
   try {
-    const {
-      nome,
-      descricao,
-      referencia_fabrica,
-      codigo_barras,
-      usuario_id,
-      categoria_id
-    } = req.body;
+    const { nome, descricao, referencia_fabrica, codigo_barras, usuario_id, categoria_id } =
+      req.body;
 
     if (!nome || !descricao || !usuario_id || !categoria_id) {
       return res.status(400).json({ erro: 'Campos obrigatórios ausentes.' });
@@ -280,7 +275,7 @@ app.post('/produtos', async (req, res) => {
 
     if (!referencia_fabrica && !codigo_barras) {
       return res.status(400).json({
-        erro: 'É necessário informar referência de fábrica ou código de barras.'
+        erro: 'É necessário informar referência de fábrica ou código de barras.',
       });
     }
 
@@ -292,8 +287,8 @@ app.post('/produtos', async (req, res) => {
         codigo_barras,
         nota_atual: 0,
         usuario: { connect: { id: usuario_id } },
-        categoria: { connect: { id: categoria_id } }
-      }
+        categoria: { connect: { id: categoria_id } },
+      },
     });
 
     res.status(201).json(novoProduto);
@@ -306,7 +301,7 @@ app.post('/produtos', async (req, res) => {
 app.get('/status', (req, res) => {
   res.json({
     online: true,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
