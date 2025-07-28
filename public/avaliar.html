@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="pt-br">
+<<<<<<< HEAD
   <head>
     <meta charset="UTF-8" />
     <title>Avaliar Produto</title>
@@ -55,6 +56,69 @@
     <form onsubmit="enviarAvaliacao(event)">
       <label for="produto_id">ID do Produto:</label>
       <input type="number" id="produto_id" required />
+=======
+<head>
+  <meta charset="UTF-8" />
+  <title>Avaliar Produto</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef2f7;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .msg {
+      margin-top: 15px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="menu"></div>
+  <script>
+    fetch('menu.html')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('menu').innerHTML = html;
+      });
+  </script>
+  <h1>📝 Avaliar Produto</h1>
+  <form onsubmit="enviarAvaliacao(event)">
+    <label for="produto_id">ID do Produto:</label>
+    <input type="number" id="produto_id" required />
+>>>>>>> 2fabf801dd705ed3ba55bcf6cef14559b76982f6
 
       <label for="usuario_id">Seu ID de Usuário:</label>
       <input type="number" id="usuario_id" required />

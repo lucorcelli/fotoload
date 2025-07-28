@@ -67,6 +67,7 @@ app.get('/produtos/destaques', async (req, res) => {
           where: { id: nota.produto_id },
           include: { categoria: true, fotos: { take: 1 } },
         });
+<<<<<<< HEAD
         if (!produto) return null;
         return {
           id: produto.id,
@@ -83,6 +84,30 @@ app.get('/produtos/destaques', async (req, res) => {
   } catch (e) {
     res.status(500).json({ erro: e.message });
   }
+=======
+        const destaques = await Promise.all(notas.map(async (nota) => {
+            const produto = await prisma.produto.findUnique({
+                where: { id: nota.produto_id },
+                include: { categoria: true, fotos: { take: 1 } }
+            });
+            if (!produto)
+                return null;
+            return {
+                id: produto.id,
+                nome: produto.nome,
+                categoria: produto.categoria?.nome ?? null,
+                foto: produto.fotos[0]  
+                    ? `https://fotoload-api.onrender.com/fotos/${produto.fotos[0].id}` 
+                    : null,
+                nota_media: Math.round(nota._avg.nota ?? 0)
+            };
+        }));
+        res.json(destaques.filter(Boolean));
+    }
+    catch (e) {
+        res.status(500).json({ erro: e.message });
+    }
+>>>>>>> 2fabf801dd705ed3ba55bcf6cef14559b76982f6
 });
 // 📸 Adicionar foto via URL
 app.post('/produtos/:id/fotos/url', async (req, res) => {

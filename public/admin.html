@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="pt-br">
+<<<<<<< HEAD
   <head>
     <meta charset="UTF-8" />
     <title>Fotoload - Painel Admin</title>
@@ -44,6 +45,59 @@
       </thead>
       <tbody id="usuarios"></tbody>
     </table>
+=======
+<head>
+  <meta charset="UTF-8" />
+  <title>Fotoload - Painel Admin</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f8f8;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #444;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    th {
+      background-color: #eee;
+    }
+  </style>
+</head>
+<body>
+  <div id="menu"></div>
+  <script>
+    fetch('menu.html')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('menu').innerHTML = html;
+      });
+  </script>
+  <h1>👮 Painel Administrativo</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Créditos</th>
+        <th>Débitos</th>
+        <th>Cadastro</th>
+      </tr>
+    </thead>
+    <tbody id="usuarios"></tbody>
+  </table>
+>>>>>>> 2fabf801dd705ed3ba55bcf6cef14559b76982f6
 
     <script>
       fetch('https://fotoload-api.onrender.com/usuarios')

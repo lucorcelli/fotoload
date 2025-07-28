@@ -267,6 +267,7 @@ import { PrismaClient } from
 const prisma = new PrismaClient();
 
 async function main() {
+<<<<<<< HEAD
 console.log('Inserindo usuários...');
 const usuario1 = await prisma.usuario.upsert({
 where: { email: 'luciano@exemplo.com' },
@@ -334,6 +335,75 @@ process.exit(1);
 .finally(async () => {
 await prisma.$disconnect();
 });
+=======
+  console.log('Inserindo usuários...');
+  const usuario1 = await prisma.usuario.upsert({
+    where: { email: 'luciano@exemplo.com' },
+    update: {},
+    create: {
+      nome: 'Luciano',
+      email: 'luciano@exemplo.com',
+      saldo_creditos: 100
+    }
+  });
+
+  const usuario2 = await prisma.usuario.upsert({
+    where: { email: 'marina@exemplo.com' },
+    update: {},
+    create: {
+      nome: 'Marina',
+      email: 'marina@exemplo.com',
+      saldo_creditos: 150
+    }
+  });
+
+  console.log('Inserindo categorias...');
+  const categoria1 = await prisma.categoria.create({ data: { nome: 'Câmeras DSLR' } });
+  const categoria2 = await prisma.categoria.create({ data: { nome: 'Lentes' } });
+
+  console.log('Inserindo produtos...');
+  const produto1 = await prisma.produto.create({
+    data: {
+      nome: 'Canon EOS Rebel T7',
+      descricao: 'Câmera DSLR com excelente custo-benefício.',
+      referencia_fabrica: '12345',
+      fotos: ['foto1.jpg', 'foto2.jpg'],
+      usuario_id: usuario1.id
+    }
+  });
+
+  const produto2 = await prisma.produto.create({
+    data: {
+      nome: 'Nikon D3500',
+      descricao: 'Câmera DSLR compacta e fácil de usar.',
+      codigo_barras: '67890',
+      fotos: ['foto3.jpg', 'foto4.jpg'],
+      usuario_id: usuario2.id
+    }
+  });
+
+  const produto3 = await prisma.produto.create({
+    data: {
+      nome: 'Lente 50mm f/1.8',
+      descricao: 'Lente versátil para retratos e fotografia geral.',
+      referencia_fabrica: '54321',
+      fotos: ['foto5.jpg', 'foto6.jpg'],
+      usuario_id: usuario1.id
+    }
+  });
+
+  console.log('Seed concluído!');
+}
+
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
+>>>>>>> 2fabf801dd705ed3ba55bcf6cef14559b76982f6
 
 Diagrama Textual do Banco
 
@@ -537,11 +607,19 @@ POST /api/produtos
 Content-Type: application/json
 
 {
+<<<<<<< HEAD
 "nome": "Canon EOS Rebel T7",
 "descricao": "Câmera DSLR com excelente custo-benefício.",
 "referencia_fabrica": "12345",
 "fotos": ["foto1.jpg", "foto2.jpg"],
 "usuario_id": "uuid-do-usuario"
+=======
+  "nome": "Canon EOS Rebel T7",
+  "descricao": "Câmera DSLR com excelente custo-benefício.",
+  "referencia_fabrica": "12345",
+  "fotos": ["foto1.jpg", "foto2.jpg"],
+  "usuario_id": "uuid-do-usuario"
+>>>>>>> 2fabf801dd705ed3ba55bcf6cef14559b76982f6
 }
 
 Avaliar Produto
@@ -550,9 +628,15 @@ POST /api/produtos/:id/avaliar
 Content-Type: application/json
 
 {
+<<<<<<< HEAD
 "nota": 95,
 "comentario": "Produto excelente!",
 "usuario_id": "uuid-do-usuario"
+=======
+  "nota": 95,
+  "comentario": "Produto excelente!",
+  "usuario_id": "uuid-do-usuario"
+>>>>>>> 2fabf801dd705ed3ba55bcf6cef14559b76982f6
 }
 
 Buscar Produtos
@@ -561,6 +645,7 @@ GET /api/produtos
 Content-Type: application/json
 
 {
+<<<<<<< HEAD
 "filtro": {
 "categoria": "Câmeras DSLR",
 "nota_minima": 80
@@ -569,4 +654,11 @@ Content-Type: application/json
 
 ```
 
+=======
+  "filtro": {
+    "categoria": "Câmeras DSLR",
+    "nota_minima": 80
+  }
+}
+>>>>>>> 2fabf801dd705ed3ba55bcf6cef14559b76982f6
 ```

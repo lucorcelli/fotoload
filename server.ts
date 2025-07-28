@@ -71,6 +71,7 @@ app.get('/produtos/destaques', async (req, res) => {
 
         if (!produto) return null;
 
+<<<<<<< HEAD
         return {
           id: produto.id,
           nome: produto.nome,
@@ -82,6 +83,18 @@ app.get('/produtos/destaques', async (req, res) => {
         };
       })
     );
+=======
+      return {
+        id: produto.id,
+        nome: produto.nome,
+        categoria: produto.categoria?.nome ?? null,
+        foto: produto.fotos[0] 
+          ? `https://fotoload-api.onrender.com/fotos/${produto.fotos[0].id}` 
+          : `https://fotoload-api.onrender.com/imagens/sem-imagem.jpg`,
+        nota_media: Math.round(nota._avg.nota ?? 0)
+      };
+    }));
+>>>>>>> 2fabf801dd705ed3ba55bcf6cef14559b76982f6
 
     res.json(destaques.filter(Boolean));
   } catch (e: any) {
