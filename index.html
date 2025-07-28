@@ -59,7 +59,6 @@
         const grid = document.getElementById('destaques');
         produtos.forEach(p => {
           const fotoUrl = `https://fotoload-api.onrender.com/fotos/${p.foto}`;
-          console.log('URL da foto:', fotoUrl);   
           console.log('Foto recebida:', p.foto);
           grid.innerHTML += `
               <div class="card">
