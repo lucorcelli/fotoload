@@ -58,7 +58,7 @@
       .then(produtos => {
         const grid = document.getElementById('destaques');
         produtos.forEach(p => {
-          const fotoUrl = `https://fotoload-api.onrender.com/fotos/${p.foto}`;
+          const fotoUrl = p.foto || '/imagens/sem-imagem.jpg';
             grid.innerHTML += `
             <div class="card">
                 <img src="${fotoUrl}" />
