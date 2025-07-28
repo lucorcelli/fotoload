@@ -59,14 +59,13 @@
         const grid = document.getElementById('destaques');
         produtos.forEach(p => {
           const fotoUrl = `https://fotoload-api.onrender.com/fotos/${p.foto}`;
-          console.log('Foto recebida:', p.foto);
-          grid.innerHTML += `
-              <div class="card">
+            grid.innerHTML += `
+            <div class="card">
                 <img src="${fotoUrl}" />
                 <h3>${p.nome}</h3>
                 <p>${p.categoria}</p>
                 <div class="nota">⭐ ${p.nota_media}</div>
-              </div>
+            </div>
             `;
         });
       })
