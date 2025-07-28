@@ -59,7 +59,8 @@
         const grid = document.getElementById('destaques');
         produtos.forEach(p => {
           const fotoUrl = p.foto || '/imagens/sem-imagem.jpg';
-             grid.innerHTML += `
+          console.log('URL da foto:', fotoUrl);   
+          grid.innerHTML += `
               <div class="card">
                 <img src="${fotoUrl}" />
                 <h3>${p.nome}</h3>
