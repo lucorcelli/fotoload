@@ -5,6 +5,14 @@
   <title>Cadastro de Fotos</title>
 </head>
 <body>
+  <div id="menu"></div>
+  <script>
+    fetch('menu.html')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('menu').innerHTML = html;
+      });
+  </script>
   <h2>Adicionar fotos para o produto</h2>
   <form id="formFotos" enctype="multipart/form-data">
     
