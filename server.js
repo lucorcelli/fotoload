@@ -13,6 +13,8 @@ const client_1 = require('@prisma/client');
 const app = (0, express_1.default)();
 const prisma = new client_1.PrismaClient();
 const upload = (0, multer_1.default)();
+const minNotaInput = document.getElementById('minNota');
+const minNota = minNotaInput ? minNotaInput.value : 0;
 app.use(
   (0, cors_1.default)({
     origin: 'https://fotoload.vercel.app',
@@ -61,14 +63,19 @@ app.get('/produtos/destaques', async (req, res) => {
       orderBy: { _avg: { nota: 'desc' } },
       take: 5,
     });
+
     const destaques = await Promise.all(
       notas.map(async (nota) => {
         const produto = await prisma.produto.findUnique({
           where: { id: nota.produto_id },
-          include: { categoria: true, fotos: { take: 1 } },
+          include: {
+            categoria: true,
+            fotos: { take: 1 }
+          },
         });
-<<<<<<< HEAD
+
         if (!produto) return null;
+
         return {
           id: produto.id,
           nome: produto.nome,
@@ -80,34 +87,11 @@ app.get('/produtos/destaques', async (req, res) => {
         };
       })
     );
+
     res.json(destaques.filter(Boolean));
   } catch (e) {
     res.status(500).json({ erro: e.message });
   }
-=======
-        const destaques = await Promise.all(notas.map(async (nota) => {
-            const produto = await prisma.produto.findUnique({
-                where: { id: nota.produto_id },
-                include: { categoria: true, fotos: { take: 1 } }
-            });
-            if (!produto)
-                return null;
-            return {
-                id: produto.id,
-                nome: produto.nome,
-                categoria: produto.categoria?.nome ?? null,
-                foto: produto.fotos[0]  
-                    ? `https://fotoload-api.onrender.com/fotos/${produto.fotos[0].id}` 
-                    : null,
-                nota_media: Math.round(nota._avg.nota ?? 0)
-            };
-        }));
-        res.json(destaques.filter(Boolean));
-    }
-    catch (e) {
-        res.status(500).json({ erro: e.message });
-    }
->>>>>>> 2fabf801dd705ed3ba55bcf6cef14559b76982f6
 });
 // 📸 Adicionar foto via URL
 app.post('/produtos/:id/fotos/url', async (req, res) => {
@@ -308,5 +292,37 @@ async function main() {
     console.error('❌ Falha ao conectar com o banco:', err);
     process.exit(1);
   }
+  window.addEventListener('DOMContentLoaded', () => {
+  carregarProdutos();
+  });
+  async function carregarProdutos() {
+  const resposta = await fetch('/api/produtos-do-usuario');
+  const produtos = await resposta.json();
+
+  const container = document.getElementById('listaProdutos');
+  container.innerHTML = ''; // limpa antes de renderizar
+
+  produtos.forEach(produto => {
+    const card = document.createElement('div');
+    card.innerHTML = `
+      <input value="${produto.nome}" />
+      <input type="number" value="${produto.preco}" />
+      <button onclick="salvarAlteracao(${produto.id})">Salvar</button>
+    `;
+    container.appendChild(card);
+  });
+}
+async function salvarAlteracao(id) {
+  const card = document.querySelector(`#produto-${id}`);
+  const nome = card.querySelector('.nome').value;
+  const preco = card.querySelector('.preco').value;
+
+  await fetch(`/api/produto/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ nome, preco })
+  });
+}
+  
 }
 main();

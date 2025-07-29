@@ -1,84 +1,80 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/png" href="/favicon.png" />
-  <title>Fotoload - Destaques</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f2f2f2;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      color: #333;
-    }
-    .grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: center;
-    }
-    .card {
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 0 10px #ccc;
-      width: 250px;
-      padding: 15px;
-      text-align: center;
-    }
-    .card img {
-      width: 100%;
-      border-radius: 4px;
-    }
-    .nota {
-      font-size: 1.1em;
-      color: #ffa500;
-      margin-top: 5px;
-    }
-  </style>
-</head>
-<body>
-  <div id="menu"></div>
-  <script>
-    fetch('menu.html')
-      .then(res => res.text())
-      .then(html => {
-        document.getElementById('menu').innerHTML = html;
-      });
-  </script>
-  <h1>📸 Produtos em Destaque</h1>
-  <div class="grid" id="destaques"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <title>Fotoload - Destaques</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f2f2f2;
+        padding: 20px;
+      }
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+      .grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+      }
+      .card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 0 10px #ccc;
+        width: 250px;
+        padding: 15px;
+        text-align: center;
+      }
+      .card img {
+        width: 100%;
+        border-radius: 4px;
+      }
+      .nota {
+        font-size: 1.1em;
+        color: #ffa500;
+        margin-top: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="menu"></div>
+    <script>
+      fetch('menu.html')
+        .then(res => res.text())
+        .then(html => {
+          document.getElementById('menu').innerHTML = html;
+        });
+    </script>
 
-  <script>
-const carregarProdutos = async () => {
-  const minNota = document.getElementById('minNota').value;
-  const categoria = document.getElementById('categoria').value;
-  const busca = document.getElementById('busca').value;
+    <h1>📸 Produtos em Destaque</h1>
+    <div class="grid" id="destaques"></div>
 
-  const produtos = await fetch('/api/produtos').then(res => res.json());
-  const filtrados = produtos.filter(p =>
-    (p.nota_atual >= minNota) &&
-    (!categoria || p.categoria === categoria) &&
-    (!busca || p.nome.toLowerCase().includes(busca.toLowerCase()))
-  );
-
-  const grid = document.getElementById('grid');
-  grid.innerHTML = '';
-  filtrados.forEach(p => {
-    grid.innerHTML += `
-      <div class="card">
-        <img src="${p.fotos && p.fotos.length ? p.fotos[0] : '/imagens/sem-imagem.jpg'}" />
-        <h3>${p.nome}</h3>
-        <p>${p.descricao || 'Sem descrição'}</p>
-        <div class="nota">⭐ ${p.nota_atual || '–'}</div>
-      </div>
-    `;
-  });
-};
-
-carregarProdutos();
-</script>
-
+    <script>
+      fetch('https://fotoload-api.onrender.com/produtos/destaques')
+        .then(res => res.json())
+        .then(produtos => {
+          const grid = document.getElementById('destaques');
+          produtos.forEach(p => {
+            const fotoUrl = p.foto || '/imagens/sem-imagem.jpg';
+            grid.innerHTML += `
+              <div class="card">
+                <img src="${fotoUrl}" />
+                <h3>${p.nome}</h3>
+                <p>${p.categoria || 'Sem categoria'}</p>
+                <div class="nota">⭐ ${p.nota_media}</div>
+              </div>
+            `;
+          });
+        })
+        .catch(err => {
+          console.error('Erro ao buscar destaques:', err);
+          document.getElementById('destaques').innerHTML =
+            '<p>Erro ao carregar os produtos. Verifique o backend.</p>';
+        });
+    </script>
+  </body>
+</html>

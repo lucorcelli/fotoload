@@ -9,8 +9,8 @@ const app = express();
 const prisma = new PrismaClient();
 const upload = multer();
 
-app.use(
-  cors({
+
+app.use(cors({
     origin: 'https://fotoload.vercel.app',
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type'],
