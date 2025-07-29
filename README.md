@@ -403,7 +403,6 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
->>>>>>> 2fabf801dd705ed3ba55bcf6cef14559b76982f6
 
 Diagrama Textual do Banco
 
@@ -607,19 +606,20 @@ POST /api/produtos
 Content-Type: application/json
 
 {
-<<<<<<< HEAD
+
 "nome": "Canon EOS Rebel T7",
 "descricao": "Câmera DSLR com excelente custo-benefício.",
 "referencia_fabrica": "12345",
 "fotos": ["foto1.jpg", "foto2.jpg"],
 "usuario_id": "uuid-do-usuario"
-=======
+
+
   "nome": "Canon EOS Rebel T7",
   "descricao": "Câmera DSLR com excelente custo-benefício.",
   "referencia_fabrica": "12345",
   "fotos": ["foto1.jpg", "foto2.jpg"],
   "usuario_id": "uuid-do-usuario"
->>>>>>> 2fabf801dd705ed3ba55bcf6cef14559b76982f6
+
 }
 
 Avaliar Produto
@@ -628,7 +628,7 @@ POST /api/produtos/:id/avaliar
 Content-Type: application/json
 
 {
-<<<<<<< HEAD
+
 "nota": 95,
 "comentario": "Produto excelente!",
 "usuario_id": "uuid-do-usuario"
@@ -636,8 +636,6 @@ Content-Type: application/json
   "nota": 95,
   "comentario": "Produto excelente!",
   "usuario_id": "uuid-do-usuario"
->>>>>>> 2fabf801dd705ed3ba55bcf6cef14559b76982f6
-}
 
 Buscar Produtos
 
@@ -645,20 +643,15 @@ GET /api/produtos
 Content-Type: application/json
 
 {
-<<<<<<< HEAD
+
 "filtro": {
 "categoria": "Câmeras DSLR",
 "nota_minima": 80
 }
 }
 
-```
-
-=======
   "filtro": {
     "categoria": "Câmeras DSLR",
     "nota_minima": 80
   }
 }
->>>>>>> 2fabf801dd705ed3ba55bcf6cef14559b76982f6
-```
