@@ -15,6 +15,7 @@ const prisma = new client_1.PrismaClient();
 const upload = (0, multer_1.default)();
 const minNotaInput = document.getElementById('minNota');
 const minNota = minNotaInput ? minNotaInput.value : 0;
+
 app.use(
   (0, cors_1.default)({
     origin: 'https://fotoload.vercel.app',
