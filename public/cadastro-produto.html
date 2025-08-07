@@ -60,6 +60,49 @@
     }
   </style>
 </head>
+<script>
+  document.querySelector('form').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+
+    const produto = {
+      nome: document.getElementById('nome').value,
+      descricao: document.getElementById('descricao').value,
+      referencia_fabrica: document.getElementById('referencia').value,
+      codigo_barras: document.getElementById('codigo').value,
+      usuario_id: parseInt(document.getElementById('usuario_id').value),
+      categoria_id: parseInt(document.getElementById('categoria_id').value),
+      imagem_url: document.getElementById('imagem').src // se estiver usando URL
+    };
+
+    const metodo = id ? 'PUT' : 'POST';
+    const endpoint = id ? `/api/produto/${id}` : '/api/produto';
+
+    fetch(endpoint, {
+      method: metodo,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(produto)
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Erro ao salvar produto');
+        }
+        return response.json();
+      })
+      .then(data => {
+        alert('Produto salvo com sucesso!');
+        window.location.href = '/gerenciar-produtos'; // redireciona após salvar
+      })
+      .catch(error => {
+        console.error('Erro:', error);
+        alert('Falha ao salvar produto');
+      });
+  });
+</script>
 <body>
   <div id="menu"></div>
   <script>
