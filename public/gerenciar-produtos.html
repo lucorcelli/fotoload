@@ -90,6 +90,10 @@
           <h3>${produto.nome}</h3>
           <div class="nota">Nota: ${produto.nota}</div>
         `;
+        card.onclick = () => {
+        const index = produtos.indexOf(produto);
+        window.location.href = `cadastro-produto.html?id=${index}`;
+      };
         grid.appendChild(card);
       });
     }
