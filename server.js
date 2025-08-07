@@ -293,12 +293,15 @@ async function main() {
     console.error('❌ Falha ao conectar com o banco:', err);
     process.exit(1);
   }
-  window.addEventListener('DOMContentLoaded', () => {
-  carregarProdutos();
+  window.addEventListener('DOMContentLoaded', async () => {
+  await carregarProdutos();
   });
+  
   async function carregarProdutos() {
-  const resposta = await fetch('/api/produtos-do-usuario');
-  const produtos = await resposta.json();
+    const res = await fetch('/api/produtos');
+    const produtos = await res.json();
+    renderizarProdutos(produtos);
+  }
 
   const container = document.getElementById('listaProdutos');
   container.innerHTML = ''; // limpa antes de renderizar
