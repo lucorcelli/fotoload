@@ -1,26 +1,54 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Gerenciar Produtos</title>
+  <meta charset="UTF-8" />
+  <title>Fotoload - Todos os Produtos</title>
   <style>
     body {
       font-family: Arial, sans-serif;
+      background: #f9f9f9;
       padding: 20px;
     }
-    input, button {
-      margin: 5px 0;
-      padding: 8px;
+    h1 {
+      text-align: center;
+      color: #333;
     }
-    ul {
-      list-style-type: none;
-      padding: 0;
+    .filtro {
+      text-align: center;
+      margin-bottom: 20px;
     }
-    li {
-      background: #f0f0f0;
-      margin: 5px 0;
-      padding: 10px;
-      border-radius: 4px;
+    input[type="number"], input[type="text"], select {
+      padding: 6px;
+      margin: 0 5px;
+    }
+    button {
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+    .card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #ccc;
+      width: 250px;
+      padding: 15px;
+      text-align: center;
+    }
+    .card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+    .nota {
+      font-size: 1.1em;
+      color: #ffa500;
+      margin-top: 5px;
     }
   </style>
 </head>
@@ -34,44 +62,47 @@
       });
   </script>
 
-  <h1>Gerenciar Produtos</h1>
+  <h1>Fotoload - Todos os Produtos</h1>
 
-  <label for="nome">Nome do Produto:</label><br>
-  <input type="text" id="nome" placeholder="Ex: Sabão líquido"><br>
+  <div class="filtro">
+    <label for="pesquisa">Pesquisar Produto:</label>
+    <input type="text" id="pesquisa" placeholder="Digite o nome do produto" />
+    <button onclick="filtrarProdutos()">Pesquisar</button>
+  </div>
 
-  <button onclick="adicionarProduto()">Adicionar Produto</button>
-
-  <h2>Lista de Produtos:</h2>
-  <ul id="lista-produtos"></ul>
+  <div class="grid" id="produtos-grid"></div>
 
   <script>
-    const produtos = [];
+    const produtos = [
+      { nome: 'Câmera DSLR', imagem: 'camera.jpg', nota: 4.5 },
+      { nome: 'Tripé', imagem: 'tripe.jpg', nota: 4.0 },
+      { nome: 'Iluminação LED', imagem: 'led.jpg', nota: 4.8 }
+    ];
 
-    function adicionarProduto() {
-      const input = document.getElementById('nome');
-      const nomeProduto = input.value.trim();
-
-      if (nomeProduto === "") {
-        alert("Digite o nome do produto!");
-        return;
-      }
-
-      produtos.push(nomeProduto);
-      input.value = "";
-      atualizarLista();
-    }
-
-    function atualizarLista() {
-      const lista = document.getElementById('lista-produtos');
-      lista.innerHTML = "";
-
-      produtos.forEach((produto, index) => {
-        const item = document.createElement('li');
-        item.textContent = `${index + 1}. ${produto}`;
-        lista.appendChild(item);
+    function exibirProdutos(lista) {
+      const grid = document.getElementById('produtos-grid');
+      grid.innerHTML = '';
+      lista.forEach(produto => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <img src="${produto.imagem}" alt="${produto.nome}" />
+          <h3>${produto.nome}</h3>
+          <div class="nota">Nota: ${produto.nota}</div>
+        `;
+        grid.appendChild(card);
       });
     }
-  </script>
 
+    function filtrarProdutos() {
+      const pesquisa = document.getElementById('pesquisa').value.toLowerCase();
+      const filtrados = produtos.filter(produto =>
+        produto.nome.toLowerCase().includes(pesquisa)
+      );
+      exibirProdutos(filtrados);
+    }
+
+    exibirProdutos(produtos);
+  </script>
 </body>
 </html>
