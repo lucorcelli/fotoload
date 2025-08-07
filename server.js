@@ -15,6 +15,11 @@ const prisma = new client_1.PrismaClient();
 const upload = (0, multer_1.default)();
 const minNotaInput = document.getElementById('minNota');
 const minNota = minNotaInput ? minNotaInput.value : 0;
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(
   (0, cors_1.default)({
