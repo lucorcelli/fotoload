@@ -281,6 +281,9 @@ app.get('/status', (req, res) => {
   });
 });
  
+card.onclick = () => {
+  window.location.href = `cadastro-de-produto.html?id=${produtos.indexOf(produto)}`;
+};
 
 // 🚀 Inicialização segura
 async function main() {
@@ -328,7 +331,5 @@ async function salvarAlteracao(id) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ nome, preco })
   });
-}
-  
 }
 main();
