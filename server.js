@@ -280,6 +280,11 @@ app.get('/status', (req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
+ 
+card.onclick = () => {
+  window.location.href = `cadastro-de-produto.html?id=${produtos.indexOf(produto)}`;
+};
+
 // 🚀 Inicialização segura
 async function main() {
   try {
