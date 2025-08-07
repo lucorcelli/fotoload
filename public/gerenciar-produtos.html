@@ -2,120 +2,110 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <title>Fotoload - Todos os Produtos</title>
+  <title>📋 Gerenciar Produtos</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f9f9f9;
+      font-family: sans-serif;
+      background: #f2f5fa;
       padding: 20px;
+      max-width: 900px;
+      margin: auto;
     }
     h1 {
       text-align: center;
-      color: #333;
-    }
-    .filtro {
-      text-align: center;
       margin-bottom: 20px;
     }
-    input[type="number"], input[type="text"], select {
-      padding: 6px;
-      margin: 0 5px;
-    }
-    button {
-      padding: 6px 10px;
-      cursor: pointer;
-    }
-    .grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: center;
-    }
-    .card {
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 0 10px #ccc;
-      width: 250px;
-      padding: 15px;
-      text-align: center;
-    }
-    .card img {
+    table {
       width: 100%;
-      height: 160px;
-      object-fit: cover;
-      border-radius: 6px;
+      border-collapse: collapse;
+      background: #fff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    .nota {
-      font-size: 1.1em;
-      color: #ffa500;
-      margin-top: 5px;
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background: #007bff;
+      color: white;
+    }
+    a {
+      color: #007bff;
+      text-decoration: none;
+      margin-right: 10px;
+    }
+    .msg {
+      text-align: center;
+      margin-top: 15px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <div id="menu"></div>
-  <script>
-    fetch('menu.html')
-      .then(res => res.text())
-      .then(html => {
-        document.getElementById('menu').innerHTML = html;
-      });
-  </script>
-
-  <h1>Fotoload - Todos os Produtos</h1>
-
-  <div class="filtro">
-    <label for="pesquisa">Pesquisar Produto:</label>
-    <input type="text" id="pesquisa" placeholder="Digite o nome do produto" />
-    <button onclick="filtrarProdutos()">Pesquisar</button>
-  </div>
-
-  <div class="grid" id="produtos-grid"></div>
+  <h1>📋 Gerenciar Produtos</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Descrição</th>
+        <th>Referência</th>
+        <th>Código</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="lista-produtos"></tbody>
+  </table>
+  <div class="msg" id="msg"></div>
 
   <script>
-      // Simulação dos produtos (mesma estrutura do gerenciador)
-    const produtos = [
-    { nome: 'Câmera DSLR', imagem: 'camera.jpg', nota: 4.5, usuario_id: 1 },
-    { nome: 'Tripé', imagem: 'tripe.jpg', nota: 4.0, usuario_id: 1 },
-    { nome: 'Iluminação LED', imagem: 'led.jpg', nota: 4.8, usuario_id: 2 }
-  ];
+    async function carregarProdutos() {
+      const msg = document.getElementById('msg');
+      try {
+        const res = await fetch('https://fotoload-api.onrender.com/produtos');
+        if (!res.ok) throw new Error('Erro ao buscar produtos');
+        const produtos = await res.json();
 
-  function exibirProdutos(lista) {
-    const grid = document.getElementById('produtos-grid');
-    grid.innerHTML = '';
+        const tbody = document.getElementById('lista-produtos');
+        tbody.innerHTML = '';
 
-    const produtosDoUsuario = lista.filter(p => p.usuario_id === usuarioAtual);
+        produtos.forEach(p => {
+          const linha = document.createElement('tr');
+          linha.innerHTML = `
+            <td>${p.nome}</td>
+            <td>${p.descricao}</td>
+            <td>${p.referencia_fabrica || '-'}</td>
+            <td>${p.codigo_barras || '-'}</td>
+            <td>
+              <a href="cadastro-produto.html?id=${p.id}">✏️ Editar</a>
+              <a href="#" onclick="excluirProduto(${p.id})">🗑️ Excluir</a>
+            </td>
+          `;
+          tbody.appendChild(linha);
+        });
 
-    produtosDoUsuario.forEach(produto => {
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = `
-        <img src="${produto.imagem}" alt="${produto.nome}" />
-        <h3>${produto.nome}</h3>
-        <div class="nota">Nota: ${produto.nota}</div>
-      `;
-      card.onclick = () => {
-        const index = produtos.indexOf(produto);
-        window.location.href = `cadastro-produto.html?id=${index}`;
-      };
-      grid.appendChild(card);
-    });
-  }
-
-localStorage.setItem('usuario_id', 1);
-const usuarioAtual = parseInt(localStorage.getItem('usuario_id'));
-
-exibirProdutos(produtos);
-
-    function filtrarProdutos() {
-      const pesquisa = document.getElementById('pesquisa').value.toLowerCase();
-      const filtrados = produtos.filter(produto =>
-        produto.nome.toLowerCase().includes(pesquisa)
-      );
-      exibirProdutos(filtrados);
+        msg.textContent = `✅ ${produtos.length} produto(s) carregado(s).`;
+      } catch (err) {
+        console.error('Erro:', err);
+        msg.textContent = '❌ Falha ao carregar produtos.';
+      }
     }
 
-    exibirProdutos(produtos);
+    async function excluirProduto(id) {
+      if (!confirm('Tem certeza que deseja excluir este produto?')) return;
+      try {
+        const res = await fetch(`https://fotoload-api.onrender.com/produtos/${id}`, {
+          method: 'DELETE'
+        });
+        if (!res.ok) throw new Error('Erro ao excluir');
+        carregarProdutos(); // recarrega a lista
+      } catch (err) {
+        console.error('Erro ao excluir:', err);
+        alert('❌ Falha ao excluir produto.');
+      }
+    }
+
+    carregarProdutos();
   </script>
 </body>
 </html>
