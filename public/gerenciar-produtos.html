@@ -80,23 +80,26 @@
     ];
 
     function exibirProdutos(lista) {
-      const grid = document.getElementById('produtos-grid');
-      grid.innerHTML = '';
-      lista.forEach(produto => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <img src="${produto.imagem}" alt="${produto.nome}" />
-          <h3>${produto.nome}</h3>
-          <div class="nota">Nota: ${produto.nota}</div>
-        `;
-        card.onclick = () => {
-        const index = produtos.indexOf(produto);
-        window.location.href = `cadastro-produto.html?id=${index}`;
-      };
-        grid.appendChild(card);
-      });
-    }
+  const grid = document.getElementById('produtos-grid');
+  grid.innerHTML = '';
+
+  const produtosDoUsuario = lista.filter(p => p.usuario_id === usuarioAtual);
+
+  produtosDoUsuario.forEach(produto => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <img src="${produto.imagem}" alt="${produto.nome}" />
+      <h3>${produto.nome}</h3>
+      <div class="nota">Nota: ${produto.nota}</div>
+    `;
+    card.onclick = () => {
+      const index = produtos.indexOf(produto);
+      window.location.href = `cadastro-produto.html?id=${index}`;
+    };
+    grid.appendChild(card);
+  });
+}
 
     function filtrarProdutos() {
       const pesquisa = document.getElementById('pesquisa').value.toLowerCase();
