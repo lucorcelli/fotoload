@@ -145,7 +145,50 @@
     }
   }
 
+  
+  // Simulação dos produtos (mesma estrutura do gerenciador)
+  const produtos = [
+    { 
+      nome: 'Câmera DSLR',
+      descricao: 'Alta resolução para profissionais',
+      referencia_fabrica: 'CAM123',
+      codigo_barras: '7894561230123',
+      usuario_id: 1,
+      categoria_id: 2
+    },
+    {
+      nome: 'Tripé',
+      descricao: 'Estável e leve',
+      referencia_fabrica: 'TRP456',
+      codigo_barras: '7894561230456',
+      usuario_id: 1,
+      categoria_id: 3
+    },
+    {
+      nome: 'Iluminação LED',
+      descricao: 'Luz branca ajustável',
+      referencia_fabrica: 'LED789',
+      codigo_barras: '7894561230789',
+      usuario_id: 2,
+      categoria_id: 4
+    }
+  ];
 
+  // Lê o ID da URL
+  const params = new URLSearchParams(window.location.search);
+  const index = parseInt(params.get('id'));
+
+  // Se o produto existir, preenche os campos
+  if (!isNaN(index) && produtos[index]) {
+    const p = produtos[index];
+    document.getElementById('nome').value = p.nome;
+    document.getElementById('descricao').value = p.descricao;
+    document.getElementById('referencia').value = p.referencia_fabrica;
+    document.getElementById('codigo').value = p.codigo_barras;
+    document.getElementById('usuario_id').value = p.usuario_id;
+    document.getElementById('categoria_id').value = p.categoria_id;
+  }
+  
   
   document.getElementById('cadastroForm').addEventListener('submit', async function (e) {
     e.preventDefault();
