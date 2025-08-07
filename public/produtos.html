@@ -53,6 +53,14 @@
     </style>
   </head>
   <body>
+    <div id="menu"></div>
+  <script>
+    fetch('menu.html')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('menu').innerHTML = html;
+      });
+    </script>
     <h1>🛍️ Todos os Produtos</h1>
     <div class="filtro">
       <label for="minNota">Nota mínima:</label>
