@@ -147,32 +147,13 @@
 
   
   // Simulação dos produtos (mesma estrutura do gerenciador)
-  const produtos = [
-    { 
-      nome: 'Câmera DSLR',
-      descricao: 'Alta resolução para profissionais',
-      referencia_fabrica: 'CAM123',
-      codigo_barras: '7894561230123',
-      usuario_id: 1,
-      categoria_id: 2
-    },
-    {
-      nome: 'Tripé',
-      descricao: 'Estável e leve',
-      referencia_fabrica: 'TRP456',
-      codigo_barras: '7894561230456',
-      usuario_id: 1,
-      categoria_id: 3
-    },
-    {
-      nome: 'Iluminação LED',
-      descricao: 'Luz branca ajustável',
-      referencia_fabrica: 'LED789',
-      codigo_barras: '7894561230789',
-      usuario_id: 2,
-      categoria_id: 4
-    }
-  ];
+  cconst usuarioAtual = 1; // Simulação: ID do usuário logado
+
+const produtos = [
+  { nome: 'Câmera DSLR', imagem: 'camera.jpg', nota: 4.5, usuario_id: 1 },
+  { nome: 'Tripé', imagem: 'tripe.jpg', nota: 4.0, usuario_id: 1 },
+  { nome: 'Iluminação LED', imagem: 'led.jpg', nota: 4.8, usuario_id: 2 }
+];
 
   // Lê o ID da URL
   const params = new URLSearchParams(window.location.search);
