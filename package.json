@@ -37,14 +37,7 @@
     "multer": "^2.0.2",
     "prisma": "^6.13.0"
   },
-  "compilerOptions": {
-    "typeRoots": [
-      "./node_modules/@types"
-    ],
-    "types": [
-      "node"
-    ]
-  },
+
   "description": "Marketplace de Dados & Fotos de Produtos",
   "keywords": [],
   "author": "",
